@@ -10,7 +10,7 @@ namespace Weather_server.Components.Data
 
             // openweather API
 
-            //string your_api_key = "0ef163157c35d4eb8b15a898120f8b77";
+            //string your_api_key = "YOUR API";
             //HttpClient cl = new HttpClient() { BaseAddress = new Uri("http://api.openweathermap.org") };
             //var response = await cl.GetFromJsonAsync<Root>($"/data/2.5/weather?q={city}&appid={your_api_key}");
 
@@ -22,7 +22,7 @@ namespace Weather_server.Components.Data
 
 
 
-            string your_api_key = "bf0de5197fde4e2ab2a65832242210";
+            string your_api_key = "YOUR API";
             HttpClient cl = new HttpClient() { BaseAddress = new Uri("http://api.weatherapi.com") };
             var response = await cl.GetFromJsonAsync<Root>($"/v1/forecast.json?key={your_api_key}&q={city}&days=1");
 
