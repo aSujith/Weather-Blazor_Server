@@ -1,0 +1,70 @@
+﻿@page "/weather"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@using Weather_server.Components.Data
+@inject WeatherForecastService ForecastService
+
+
+<PageTitle>Weather</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
+<MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
+
+<MudTextField Label="City Name" @bind-Value="cityName" Variant="Variant.Outlined" Placeholder="Enter city name" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-3" />
+
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="OnSub">Submit</MudButton>
+
+
+@if (forecasts == null)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else if (forecasts?.Count > 0)
+{
+    <MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false">
+         <HeaderContent>
+            
+                <MudTh>City</MudTh>
+                <MudTh>Date</MudTh>
+                <MudTh>Temp. (C)</MudTh>
+                <MudTh>Temp. (F)</MudTh>
+                <MudTh>Summary</MudTh>
+                <MudTh>Image</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            @foreach (var forecast in forecasts)
+            {
+                    <MudTd>@forecast.Name</MudTd>
+                    <MudTd>@forecast.Date.ToShortDateString()</MudTd>
+                    <MudTd>@forecast.TemperatureC</MudTd>
+                    <MudTd>@forecast.TemperatureF</MudTd>
+                    <MudTd>@forecast.Summary</MudTd>
+                    <MudTd><img src="@forecast.Image" alt="Weather image" style="width: 30px; height: 30px;" /></MudTd>
+            }
+        </RowTemplate>
+    </MudTable>
+}
+else
+{
+    <MudText Class="mb-8">No forecasts available. Please enter a city.</MudText>
+}
+
+@code {
+
+    public List<WeatherForecast> forecasts = new();
+    public string cityName = "";
+    public bool isLoading = false;
+
+    public async Task OnSub()
+    {
+        isLoading = true;
+
+        if (!string.IsNullOrWhiteSpace(cityName))
+        {
+            forecasts = await ForecastService.GetForecastAsync(cityName);
+            cityName = string.Empty;
+        }
+        isLoading = false;
+    }
+}
